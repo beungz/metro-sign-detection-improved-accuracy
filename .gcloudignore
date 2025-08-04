@@ -1,0 +1,25 @@
+# Ignore datasets
+**/data/*
+
+# Ignore certain files/subfolders in models folder
+**/models/classical_machine_learning/best_svc_hog_model.pkl
+**/models/deep_learning_yolo_multi_labels/test_results*
+**/models/deep_learning_yolo_multi_labels/training_results*
+**/models/deep_learning_yolo_single_label/test_results*
+**/models/deep_learning_yolo_single_label/training_results*
+
+# Ignore jupyter notebook
+**/*.ipynb
+
+# Ignore cache
+**/__pycache__/*
+
+# Ignore Git stuff
+.git/
+.gitignore
+
+
+
+
+
+
