@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 8
+names: ['Chong Nonsi', 'National Stadium', 'Ratchadamri', 'Saint Louis', 'Sala Daeng', 'Saphan Taksin', 'Siam', 'Surasak']
+
+roboflow:
+  workspace: bangkok-green-line-skytrain-dl-project
+  project: bangkok-green-line-skytrain-signage-detection
+  version: 4
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/bangkok-green-line-skytrain-dl-project/bangkok-green-line-skytrain-signage-detection/dataset/4

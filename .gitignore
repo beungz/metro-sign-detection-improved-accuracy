@@ -1,0 +1,11 @@
+scripts/__pycache__
+models/classical_machine_learning/best_svc_hog_model.pkl
+models/deep_learning_vit/checkpoint-1990/model.safetensors
+models/deep_learning_vit/checkpoint-1990/optimizer.pt
+
+data/pred_yolo_multi_labels
+data/pred_yolo_single_label
+data/demo_predictions*
+data/processed_before_roboflow
+
+yolov8s.pt
