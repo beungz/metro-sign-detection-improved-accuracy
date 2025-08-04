@@ -102,8 +102,9 @@ def extract_hog_feature(image, target_size=(128, 64)):
 
 
 
-def extract_cls_token(image_path, vit_backbone, inference_transform, device="cuda"):
+def extract_cls_token(image_path, vit_backbone, inference_transform):
     '''Extract CLS tokens from Trained Vision Transformer, from the last hidden state'''
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 
     image = Image.open(image_path).convert("RGB")
     inputs = inference_transform(image).unsqueeze(0).to(device)

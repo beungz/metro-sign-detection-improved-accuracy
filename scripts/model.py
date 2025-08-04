@@ -35,7 +35,6 @@ from scripts.build_features import extract_hog_feature, extract_cls_token
 
 def train_yolo(epochs=200, img_size=960, batchsize=16, device='cuda', single_label=False):
     '''Train a YOLOv8 model via transfer learning and return the trained model.'''
-    torch.cuda.empty_cache()
 
     # Path for single-label and multi-labels model
     if single_label:
@@ -415,7 +414,7 @@ def predict_svc_lr_rf_single_image(model, vit_backbone, inference_transform, id2
     '''Predict metro station name in the cropped signage image using the trained SVC/LR/RF model and CLS Features.'''
 
     # Extract CLS token features
-    feature_vector = extract_cls_token(cropped_image_path, vit_backbone, inference_transform)  # shape: (768,)
+    feature_vector = extract_cls_token(cropped_image_path, vit_backbone, inference_transform)
 
     # Reshape for model prediction
     X_before_scaled = feature_vector.reshape(1, -1)
