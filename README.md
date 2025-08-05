@@ -28,12 +28,12 @@ https://www.researchgate.net/publication/317929226_Text_detection_and_recognitio
 ***
 # Data Source<br>
 The training data comprises of images containing metro station signages of 8 stations in BTS Silom Line (Dark Green Line without extension), which includes National_Stadium, Siam, Ratchadamri, Sala Daeng, Chong Nonsi, Saint Louis, Surasak, and Saphan Taksin. This is one of the most popular metro line for tourists in Bangkok. The data was gathered from the internet via Google Map and Google Streetview.<br>
-
+<br>
 
 ***
 # Model Evaluation Process & Metric Selection<br>
 As our classes are quite balanced, we use test accuracy as the model evaluation for the station classification problem.<br>
-
+<br>
 
 ***
 # Modeling Approach<br>
@@ -66,7 +66,8 @@ We evaluate the model by comparing test accuracy of 7 models<br>
 7. Hybrid: YOLOv8s (single-label) for cropping signage image, ViT for CLS feature extraction, and Random Forest (RF) for station name classification
 <br>
 
-YOLOv8 is choosen as the top choice for deep learning model, and signage area detection, thanks to its SOTA objection detection with bounding boxes. Compared to previous project, YOLOv8s is used instead of YOLOv8n, as it is known to have better accuracy. There are two versions of YOLOv8 model used in this project: YOLOv8s (multi-label) and YOLOv8s (single-label). The multi-label model #2 is used for station name classification, while the single-label model (used in model #3-7) is used to crop the signage images, which will be used as input to ViT for CLS feature extraction. The cropped signage images are then used as input to SVC/LR/RF for station name classification. YOLOv8s pretrained model, yolov8s.pt, is used in this project, but excluded from this repos, and it can be downloaded automatically at the start of training.<br>
+YOLOv8 is choosen as the top choice for deep learning model, and signage area detection, thanks to its SOTA objection detection with bounding boxes. Compared to previous project, YOLOv8s is used instead of YOLOv8n, as it is known to have better accuracy. There are two versions of YOLOv8 model used in this project: YOLOv8s (multi-label) and YOLOv8s (single-label). The multi-label model #2 is used for station name classification, while the single-label model (used in model #3-7) is used to crop the signage images, which will be used as input to ViT for CLS feature extraction. The cropped signage images are then used as input to SVC/LR/RF for station name classification. Single-label model is better for signage area detection than the multi-label as based on detailed inspection of the test result, many signage area cannot be detected by multi-label model, while single-label can detect most of them. However, we also add fallback to multi-label model, so that if the signage area cannot be detected by single-label model, it will use multi-label model to detect and crop the signage area. YOLOv8s pretrained model, yolov8s.pt, is used in this project, but excluded from this repos, and it can be downloaded automatically at the start of training.<br>
+<br>
 
 SVC + HOG is used to represent classical machine learning model #1. HOG (Histogram of Oriented Gradients) is used as features for SVC, as it is known to be effective for image classification tasks. HOG features are extracted from cropped signage images. The cropped images in model #3 are obtained automatically from YOLOv8s (single-label) model.<br>
 
@@ -103,6 +104,10 @@ As a baseline comparison, we introduce two naive models:
 | 7  | Single-label sign area detection (for cropping signage image) | ViT for CLS feature extraction      |                                                      |                                                     | RF + CLS Features (for station name classification) |
 <br>
 
+**How proposed approach will differ from previous approaches?**<br>
+Majority of traffic sign recognition researches are for street signs, and no place name recognition. In some papers and products, they utilize OCR pipeline to extract place name after the signage area detection. In our approach, in contrast, we use YOLOv8s to detect signage area, and then crop the signage image, which will be used as input to ViT for CLS feature extraction. The CLS token is then used as features for SVC (or LR/RF) for station name classification. This approach is different from previous approaches, as it does not rely on OCR pipeline, and it can handle complex scenes with multiple signages in the image. In fact, we have tested multiple OCRs as a fallback to the main model, but most of the time, OCR cannot give useful texts that can enhance classification accuracy. Apart from model #5 (or 6/7), ViT model #4 can also be used for station name classification, which has shown great performance in image classification tasks.<br>
+<br>
+
 ***
 # Demo of project's visual interface<br>
 Demo application is deployed on Google Cloud, and can be accessed via the link below:<br>
@@ -122,7 +127,8 @@ The app will return cropped image of station signage, and display the name of de
 
 ***
 # Results and Conclusions<br>
-Model #5 achieves the best overall test classification accuracy, at 0.9438. This results from superior performance (0.9552) of YOLOv8s (single-label) in detecting signage area, ViT model to produce CLS tokens that can truly represent the signage image, and SVC model to classify station name based on the CLS tokens (accuracy of 0.9688).<br> 
+Model #5 achieves the best overall test classification accuracy, at 0.9438, along with model #4/6/7. This results from superior performance (0.9552) of YOLOv8s (single-label) in detecting signage area, ViT model to produce CLS tokens that can truly represent the signage image, and SVC model to classify station name based on the CLS tokens (accuracy of 0.9688). The accuracy of model #4-7 are limited by how well YOLOv8s (single-label) can detect signage area, and how well ViT can extract CLS tokens that represent the signage image.<br>
+<br> 
 <br>
 
 **Model Performance Comparison**<br>
@@ -148,6 +154,8 @@ We choose Model #5 (YOLOv8s single-label to crop signage images, ViT for CLS fea
 1. High accuracy and reliability: Although in this table, model #4/5/6/7 have the same overall test accuracy, with random test set split (different random states), model #5 tends to achieve overall test accuracy equal to or higher than model #4/6/7
 2. no need to crop images, and can handle complex scenes
 3. inference time taken is significantly lower than SVC+HOG<br>
+
+Model #4, which has the same overall test accuracy as model #5, can also be used without SVC/LR/RF model. YOLO multi-label model is best for lightweight and fast inference, but slightly lower accuracy.<br> 
 
 Compared to the two naive models, all models are far superior in terms of test classification accuracy, as the accuracy of naive models are only around 0.1<br>
 <br>
