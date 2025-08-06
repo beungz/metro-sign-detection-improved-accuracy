@@ -74,7 +74,7 @@ def run():
         uploaded_image = Image.open(uploaded_file).convert("RGB")
         st.image(uploaded_image, caption="Uploaded Image", use_container_width=True)
 
-        # Predict metro station and draw bounding boxes in the uploaded image
+        # Predict metro station in the uploaded image
         new_resulting_image_path, cropped_image_path, svc_pred = predict_yolo_cls_svc_single_image(yolo_model_multi_labels, yolo_model_single_label, svc_model, vit_backbone, vit_transform, id2label, uploaded_image)
 
         # Display the detection result
@@ -85,7 +85,7 @@ def run():
         else:
             st.write("No station detected.")
 
-        # Display the resulting image with bounding boxes
+        # Display the resulting image
         st.image(new_resulting_image_path, caption="Detected Metro Station Signage", use_container_width=True)
 
     else:
